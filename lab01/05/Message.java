@@ -1,6 +1,5 @@
 public class Message {
-    Message() {}
-    void message(String mes) {
-        System.out.println(mes);
+    public static void message(String text) {
+        System.out.println(text);
     }
 }
