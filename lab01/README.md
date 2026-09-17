@@ -182,10 +182,160 @@ int main() {
    return 0;
 }
 ```
-*Сохраните эти файлы и сравните код для функции main. Он начинается с декларации* **main:**. Сравните, как будет работать код программы
-с разными уровнями оптимизации.*
+Уровень O0
+```
+	.file	"main.cpp"
+	.text
+	.globl	main
+	.def	main;	.scl	2;	.type	32;	.endef
+	.seh_proc	main
+main:
+.LFB2239:
+	pushq	%rbp
+	.seh_pushreg	%rbp
+	movq	%rsp, %rbp
+	.seh_setframe	%rbp, 0
+	subq	$48, %rsp
+	.seh_stackalloc	48
+	.seh_endprologue
+	call	__main
+	movl	$0, -4(%rbp)
+	leaq	-12(%rbp), %rax
+	movq	%rax, %rdx
+	movq	.refptr._ZSt3cin(%rip), %rax
+	movq	%rax, %rcx
+	call	_ZNSirsERi
+	movl	$0, -8(%rbp)
+	jmp	.L2
+.L3:
+	movl	-12(%rbp), %eax
+	addl	%eax, -4(%rbp)
+	addl	$1, -8(%rbp)
+.L2:
+	cmpl	$122, -8(%rbp)
+	jle	.L3
+	movl	-4(%rbp), %eax
+	movl	%eax, %edx
+	movq	.refptr._ZSt4cout(%rip), %rax
+	movq	%rax, %rcx
+	call	_ZNSolsEi
+	movl	$0, %eax
+	addq	$48, %rsp
+	popq	%rbp
+	ret
+	.seh_endproc
+	.section .rdata,"dr"
+_ZNSt8__detail30__integer_to_chars_is_unsignedIjEE:
+	.byte	1
+_ZNSt8__detail30__integer_to_chars_is_unsignedImEE:
+	.byte	1
+_ZNSt8__detail30__integer_to_chars_is_unsignedIyEE:
+	.byte	1
+	.def	__main;	.scl	2;	.type	32;	.endef
+	.ident	"GCC: (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r3) 14.2.0"
+	.def	_ZNSirsERi;	.scl	2;	.type	32;	.endef
+	.def	_ZNSolsEi;	.scl	2;	.type	32;	.endef
+	.section	.rdata$.refptr._ZSt4cout, "dr"
+	.globl	.refptr._ZSt4cout
+	.linkonce	discard
+.refptr._ZSt4cout:
+	.quad	_ZSt4cout
+	.section	.rdata$.refptr._ZSt3cin, "dr"
+	.globl	.refptr._ZSt3cin
+	.linkonce	discard
+.refptr._ZSt3cin:
+	.quad	_ZSt3cin
 
-*В отчет запишите различающиеся фрагменты ассемблерного кода с поясненими.*
+```
+Уровень O1
+```
+	.file	"main.cpp"
+	.text
+	.globl	main
+	.def	main;	.scl	2;	.type	32;	.endef
+	.seh_proc	main
+main:
+.LFB2263:
+	subq	$56, %rsp
+	.seh_stackalloc	56
+	.seh_endprologue
+	call	__main
+	leaq	44(%rsp), %rdx
+	movq	.refptr._ZSt3cin(%rip), %rcx
+	call	_ZNSirsERi
+	movl	44(%rsp), %edx
+	movl	$123, %eax
+	.p2align 3
+.L2:
+	subl	$1, %eax
+	jne	.L2
+	imull	$123, %edx, %edx
+	movq	.refptr._ZSt4cout(%rip), %rcx
+	call	_ZNSolsEi
+	movl	$0, %eax
+	addq	$56, %rsp
+	ret
+	.seh_endproc
+	.def	__main;	.scl	2;	.type	32;	.endef
+	.ident	"GCC: (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r3) 14.2.0"
+	.def	_ZNSirsERi;	.scl	2;	.type	32;	.endef
+	.def	_ZNSolsEi;	.scl	2;	.type	32;	.endef
+	.section	.rdata$.refptr._ZSt4cout, "dr"
+	.globl	.refptr._ZSt4cout
+	.linkonce	discard
+.refptr._ZSt4cout:
+	.quad	_ZSt4cout
+	.section	.rdata$.refptr._ZSt3cin, "dr"
+	.globl	.refptr._ZSt3cin
+	.linkonce	discard
+.refptr._ZSt3cin:
+	.quad	_ZSt3cin
+
+```
+уровень o3
+```
+	.file	"main.cpp"
+	.text
+	.section	.text.startup,"x"
+	.p2align 4
+	.globl	main
+	.def	main;	.scl	2;	.type	32;	.endef
+	.seh_proc	main
+main:
+.LFB2263:
+	subq	$56, %rsp
+	.seh_stackalloc	56
+	.seh_endprologue
+	call	__main
+	movq	.refptr._ZSt3cin(%rip), %rcx
+	leaq	44(%rsp), %rdx
+	call	_ZNSirsERi
+	imull	$123, 44(%rsp), %edx
+	movq	.refptr._ZSt4cout(%rip), %rcx
+	call	_ZNSolsEi
+	xorl	%eax, %eax
+	addq	$56, %rsp
+	ret
+	.seh_endproc
+	.def	__main;	.scl	2;	.type	32;	.endef
+	.ident	"GCC: (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r3) 14.2.0"
+	.def	_ZNSirsERi;	.scl	2;	.type	32;	.endef
+	.def	_ZNSolsEi;	.scl	2;	.type	32;	.endef
+	.section	.rdata$.refptr._ZSt4cout, "dr"
+	.globl	.refptr._ZSt4cout
+	.linkonce	discard
+.refptr._ZSt4cout:
+	.quad	_ZSt4cout
+	.section	.rdata$.refptr._ZSt3cin, "dr"
+	.globl	.refptr._ZSt3cin
+	.linkonce	discard
+.refptr._ZSt3cin:
+	.quad	_ZSt3cin
+
+```
+O0-переменные x, s, i в памяти, цикл выполняется 123 раза с загрузкой, сложением и сохранением.
+O1-тело цикла заменено умножением x * 123, но остался пустой счётчик: 123 пустых итерации.
+O2-цикл удалён полностью, осталось только умножение; s не создаётся, результат сразу в регистр; xorl вместо movl $0.
 
 ## Дополнительные задания
 ### Задание 1 **(4)**
