@@ -2,7 +2,8 @@
 #include <iostream>
 int main() {
     std::vector<int> v(5);
-    for (int i=0; i<5; i++)
-        std::cout << v[i] << ' ';
+    // Новый цикл
+    for (int x : v)
+        std::cout << x << ' ';
     return 0;
 }
