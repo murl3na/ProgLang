@@ -1,9 +1,9 @@
 # Языки программирования
 ## Лабораторная работа 2
 ### Задание 1 **(2)**
-C++:int, class, return, if, while
-Java:public, static, void, new, extends
-Python:def, lambda, import, None, True
+-*C++:int, class, return, if, while
+-*Java:public, static, void, new, extends
+-*Python:def, lambda, import, None, True
 создать переменные с такими именами нельзя.
 
 ### Задание 2 **(2)**
