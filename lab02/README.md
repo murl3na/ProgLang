@@ -79,7 +79,6 @@ print(*map(sum,zip(
 - Идентификаторы: print, map, sum, zip, int, input, split, i.
 - Литералы: 1, 2, 3.
 - Операторы: *, .
-- Разделители: (, ), [, ], ,.
 
 i — это временная переменная цикла
 - Имена функций: print, map, sum, zip, int, input
